@@ -61,7 +61,8 @@ func New(h Handlers, jwtSvc auth.JWTService) http.Handler {
 	mux.Handle("GET /pacientes/{id}/historia", authMw(allRoles(http.HandlerFunc(h.Historia.GetByPaciente))))
 	mux.Handle("PUT /pacientes/{id}/historia/antecedentes", authMw(staffRoles(http.HandlerFunc(h.Historia.UpdateAntecedentes))))
 	mux.Handle("GET /pacientes/{id}/historia/notas", authMw(allRoles(http.HandlerFunc(h.Historia.GetNotas))))
-	mux.Handle("POST /pacientes/{id}/historia/notas", authMw(staffRoles(http.HandlerFunc(h.Historia.CreateNota))))
+	clinicalRoles := middleware.RequireRoles("Administradora", "Licenciada", "Medico")
+	mux.Handle("POST /pacientes/{id}/historia/notas", authMw(clinicalRoles(http.HandlerFunc(h.Historia.CreateNota))))
 
 	// Citas
 	mux.Handle("GET /citas", authMw(allRoles(http.HandlerFunc(h.Cita.GetAll))))

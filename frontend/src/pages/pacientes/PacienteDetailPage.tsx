@@ -276,7 +276,7 @@ export function PacienteDetailPage() {
               <Hash className="h-5 w-5 text-primary" />
               <h3 className="font-semibold">Notas de Evolución</h3>
             </div>
-            {hasRole('Administradora', 'Licenciada') && historia && (
+            {hasRole('Administradora', 'Licenciada', 'Medico') && historia && (
               <Button size="sm" onClick={() => setShowNotaForm(true)}>
                 <Plus className="h-3.5 w-3.5 mr-1" />
                 Nueva Nota

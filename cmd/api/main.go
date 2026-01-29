@@ -73,6 +73,7 @@ func main() {
 		Consentimiento: handler.NewConsentimientoHandler(consentimientoSvc),
 		Cita:           handler.NewCitaHandler(citaSvc),
 		Historia:       handler.NewHistoriaHandler(historiaSvc),
+		Rol:            handler.NewRolHandler(rolRepo),
 	}
 
 	mux := router.New(handlers, jwtSvc)

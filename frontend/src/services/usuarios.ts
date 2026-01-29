@@ -30,17 +30,7 @@ export const usuariosService = {
   },
 
   getRoles: async () => {
-    // Roles come from the usuarios list - we extract unique roles
-    // For now we use a hardcoded approach since there's no /roles endpoint
-    const res = await api.get<ApiResponse<Usuario[]>>('/usuarios', { params: { per_page: 100 } });
-    const roles: Rol[] = [];
-    const seen = new Set<string>();
-    for (const u of res.data.data || []) {
-      if (u.rol && !seen.has(u.rol.id)) {
-        seen.add(u.rol.id);
-        roles.push(u.rol);
-      }
-    }
-    return roles;
+    const res = await api.get<ApiResponse<Rol[]>>('/roles');
+    return res.data.data ?? [];
   },
 };

@@ -15,6 +15,7 @@ type Handlers struct {
 	Consentimiento *handler.ConsentimientoHandler
 	Cita           *handler.CitaHandler
 	Historia       *handler.HistoriaHandler
+	Rol            *handler.RolHandler
 }
 
 func New(h Handlers, jwtSvc auth.JWTService) http.Handler {
@@ -35,6 +36,9 @@ func New(h Handlers, jwtSvc auth.JWTService) http.Handler {
 	adminOnly := middleware.RequireRoles("Administradora")
 	staffRoles := middleware.RequireRoles("Administradora", "Licenciada")
 	allRoles := middleware.RequireRoles("Administradora", "Licenciada", "Interno", "Medico")
+
+	// Roles (autenticado)
+	mux.Handle("GET /roles", authMw(allRoles(http.HandlerFunc(h.Rol.GetAll))))
 
 	// Usuarios (solo admin)
 	mux.Handle("GET /usuarios", authMw(adminOnly(http.HandlerFunc(h.Usuario.GetAll))))

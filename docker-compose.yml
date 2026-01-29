@@ -21,8 +21,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: caribel_api
-    ports:
-      - "${SERVER_PORT:-8081}:${SERVER_PORT:-8081}"
+    expose:
+      - "${SERVER_PORT:-9090}"
     depends_on:
       postgres:
         condition: service_healthy
@@ -30,6 +30,16 @@ services:
       - .env
     environment:
       DB_HOST: postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: caribel_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api
 
 volumes:
   pgdata:

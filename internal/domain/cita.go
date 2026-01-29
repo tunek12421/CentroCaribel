@@ -81,4 +81,5 @@ type CitaRepository interface {
 	GetByPacienteID(ctx context.Context, pacienteID uuid.UUID) ([]Cita, error)
 	GetByFecha(ctx context.Context, fecha time.Time) ([]Cita, error)
 	UpdateEstado(ctx context.Context, id uuid.UUID, estado EstadoCita) error
+	Reagendar(ctx context.Context, id uuid.UUID, fecha time.Time, hora string, turno TurnoCita) error
 }

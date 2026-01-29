@@ -37,11 +37,28 @@ func (r *CreateCitaRequest) Validate() error {
 
 type UpdateEstadoCitaRequest struct {
 	Estado domain.EstadoCita `json:"estado"`
+	Fecha  string            `json:"fecha,omitempty"`
+	Hora   string            `json:"hora,omitempty"`
+	Turno  domain.TurnoCita  `json:"turno,omitempty"`
 }
 
 func (r *UpdateEstadoCitaRequest) Validate() error {
 	if !r.Estado.IsValid() {
 		return apperrors.NewBadRequest("Estado de cita inválido")
+	}
+	if r.Estado == domain.EstadoReagendada {
+		if r.Fecha == "" {
+			return apperrors.NewBadRequest("La fecha es requerida para reagendar")
+		}
+		if r.Hora == "" {
+			return apperrors.NewBadRequest("La hora es requerida para reagendar")
+		}
+		if r.Turno == "" {
+			r.Turno = domain.TurnoAM
+		}
+		if !r.Turno.IsValid() {
+			return apperrors.NewBadRequest("El turno debe ser 'AM' o 'PM'")
+		}
 	}
 	return nil
 }

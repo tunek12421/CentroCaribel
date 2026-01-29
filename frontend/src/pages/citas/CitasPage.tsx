@@ -8,13 +8,28 @@ import { Badge } from '../../components/ui/Badge';
 import { Spinner } from '../../components/ui/Spinner';
 import { Plus } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
-import { ESTADO_COLORS, ESTADO_LABELS, TRANSICIONES_VALIDAS, type EstadoCita } from '../../types';
+import { ESTADO_COLORS, ESTADO_LABELS, TRANSICIONES_VALIDAS, type EstadoCita, type TurnoCita } from '../../types';
 import { CitaForm } from './CitaForm';
+
+function formatHora(hora: string): string {
+  if (!hora) return '';
+  // If it's already HH:MM format, return as-is
+  if (/^\d{2}:\d{2}$/.test(hora)) return hora;
+  // If it's ISO format like 0000-01-01T12:12:00Z, extract time
+  const match = hora.match(/T(\d{2}:\d{2})/);
+  if (match) return match[1];
+  // If it's HH:MM:SS, trim seconds
+  const timeParts = hora.match(/^(\d{2}:\d{2}):\d{2}$/);
+  if (timeParts) return timeParts[1];
+  return hora;
+}
 
 export function CitasPage() {
   const [page, setPage] = useState(1);
   const [showForm, setShowForm] = useState(false);
   const [estadoModal, setEstadoModal] = useState<{ id: string; estado: EstadoCita } | null>(null);
+  const [reagendarForm, setReagendarForm] = useState<{ id: string } | null>(null);
+  const [reagendarData, setReagendarData] = useState({ fecha: '', hora: '', turno: 'AM' as TurnoCita });
   const queryClient = useQueryClient();
   const { hasRole } = useAuthStore();
 
@@ -32,11 +47,13 @@ export function CitasPage() {
   });
 
   const estadoMutation = useMutation({
-    mutationFn: ({ id, estado }: { id: string; estado: EstadoCita }) =>
-      citasService.updateEstado(id, estado),
+    mutationFn: ({ id, data }: { id: string; data: Parameters<typeof citasService.updateEstado>[1] }) =>
+      citasService.updateEstado(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['citas'] });
       setEstadoModal(null);
+      setReagendarForm(null);
+      setReagendarData({ fecha: '', hora: '', turno: 'AM' });
     },
   });
 
@@ -44,6 +61,28 @@ export function CitasPage() {
 
   const citas = data?.data ?? [];
   const meta = data?.meta;
+
+  const handleEstadoClick = (nuevoEstado: EstadoCita, citaId: string) => {
+    if (nuevoEstado === 'REAGENDADA') {
+      setEstadoModal(null);
+      setReagendarForm({ id: citaId });
+    } else {
+      estadoMutation.mutate({ id: citaId, data: { estado: nuevoEstado } });
+    }
+  };
+
+  const handleReagendar = () => {
+    if (!reagendarForm || !reagendarData.fecha || !reagendarData.hora) return;
+    estadoMutation.mutate({
+      id: reagendarForm.id,
+      data: {
+        estado: 'REAGENDADA',
+        fecha: reagendarData.fecha,
+        hora: reagendarData.hora,
+        turno: reagendarData.turno,
+      },
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -76,7 +115,7 @@ export function CitasPage() {
                 return (
                   <tr key={c.id} className="border-b border-border hover:bg-gray-50/50">
                     <td className="px-6 py-3">{new Date(c.fecha).toLocaleDateString('es-BO')}</td>
-                    <td className="px-6 py-3">{c.hora}</td>
+                    <td className="px-6 py-3">{formatHora(c.hora)}</td>
                     <td className="px-6 py-3 hidden sm:table-cell">
                       <Badge className={c.turno === 'AM' ? 'bg-sky-100 text-sky-800' : 'bg-orange-100 text-orange-800'}>
                         {c.turno}
@@ -148,12 +187,68 @@ export function CitasPage() {
                   variant="secondary"
                   size="sm"
                   loading={estadoMutation.isPending}
-                  onClick={() => estadoMutation.mutate({ id: estadoModal.id, estado: nuevoEstado })}
+                  onClick={() => handleEstadoClick(nuevoEstado, estadoModal.id)}
                 >
                   {ESTADO_LABELS[nuevoEstado]}
                 </Button>
               ))}
             </div>
+          </div>
+        )}
+      </Modal>
+
+      <Modal
+        open={!!reagendarForm}
+        onClose={() => {
+          setReagendarForm(null);
+          setReagendarData({ fecha: '', hora: '', turno: 'AM' });
+        }}
+        title="Reagendar Cita"
+      >
+        {reagendarForm && (
+          <div className="space-y-4">
+            <p className="text-sm text-muted">
+              Ingrese la nueva fecha y hora para la cita:
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Fecha *</label>
+                <input
+                  type="date"
+                  className="w-full"
+                  value={reagendarData.fecha}
+                  onChange={(e) => setReagendarData({ ...reagendarData, fecha: e.target.value })}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Hora *</label>
+                <input
+                  type="time"
+                  className="w-full"
+                  value={reagendarData.hora}
+                  onChange={(e) => setReagendarData({ ...reagendarData, hora: e.target.value })}
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Turno *</label>
+              <select
+                className="w-full"
+                value={reagendarData.turno}
+                onChange={(e) => setReagendarData({ ...reagendarData, turno: e.target.value as TurnoCita })}
+              >
+                <option value="AM">AM (Mañana)</option>
+                <option value="PM">PM (Tarde)</option>
+              </select>
+            </div>
+            <Button
+              onClick={handleReagendar}
+              loading={estadoMutation.isPending}
+              disabled={!reagendarData.fecha || !reagendarData.hora}
+              className="w-full"
+            >
+              Confirmar Reagendamiento
+            </Button>
           </div>
         )}
       </Modal>

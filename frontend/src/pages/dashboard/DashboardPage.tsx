@@ -67,7 +67,7 @@ export function DashboardPage() {
                   <div>
                     <p className="text-sm font-medium">{cita.tipo_tratamiento}</p>
                     <p className="text-xs text-muted">
-                      {new Date(cita.fecha).toLocaleDateString('es-BO')} • {cita.hora} • {cita.turno}
+                      {new Date(cita.fecha).toLocaleDateString('es-BO')} • {/^\d{2}:\d{2}$/.test(cita.hora) ? cita.hora : cita.hora.match(/T(\d{2}:\d{2})/)?.[1] ?? cita.hora.replace(/:\d{2}$/, '')} • {cita.turno}
                     </p>
                   </div>
                   <Badge className={ESTADO_COLORS[cita.estado as EstadoCita]}>

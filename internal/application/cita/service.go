@@ -82,3 +82,25 @@ func (s *Service) UpdateEstado(ctx context.Context, id uuid.UUID, nuevoEstado do
 
 	return s.repo.UpdateEstado(ctx, id, nuevoEstado)
 }
+
+func (s *Service) Reagendar(ctx context.Context, id uuid.UUID, fecha, hora string, turno domain.TurnoCita) error {
+	c, err := s.repo.GetByID(ctx, id)
+	if err != nil {
+		return apperrors.NewNotFound("Cita")
+	}
+
+	if !domain.PuedeTransicionar(c.Estado, domain.EstadoReagendada) {
+		return apperrors.NewBadRequest("No se puede reagendar desde el estado: " + string(c.Estado))
+	}
+
+	fechaParsed, err := time.Parse("2006-01-02", fecha)
+	if err != nil {
+		return apperrors.NewBadRequest("Formato de fecha inválido. Use YYYY-MM-DD")
+	}
+
+	if _, err := time.Parse("15:04", hora); err != nil {
+		return apperrors.NewBadRequest("Formato de hora inválido. Use HH:MM")
+	}
+
+	return s.repo.Reagendar(ctx, id, fechaParsed, hora, turno)
+}

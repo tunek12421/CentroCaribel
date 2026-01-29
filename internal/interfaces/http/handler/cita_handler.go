@@ -85,9 +85,16 @@ func (h *CitaHandler) UpdateEstado(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.UpdateEstado(r.Context(), id, req.Estado); err != nil {
-		response.Error(w, err)
-		return
+	if req.Estado == "REAGENDADA" {
+		if err := h.service.Reagendar(r.Context(), id, req.Fecha, req.Hora, req.Turno); err != nil {
+			response.Error(w, err)
+			return
+		}
+	} else {
+		if err := h.service.UpdateEstado(r.Context(), id, req.Estado); err != nil {
+			response.Error(w, err)
+			return
+		}
 	}
 
 	response.JSON(w, http.StatusOK, map[string]string{"message": "Estado actualizado"})

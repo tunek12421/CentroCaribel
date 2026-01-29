@@ -1,5 +1,12 @@
 import api from '../lib/axios';
-import type { ApiResponse, Cita, CreateCitaRequest, EstadoCita } from '../types';
+import type { ApiResponse, Cita, CreateCitaRequest, EstadoCita, TurnoCita } from '../types';
+
+export interface UpdateEstadoData {
+  estado: EstadoCita;
+  fecha?: string;
+  hora?: string;
+  turno?: TurnoCita;
+}
 
 export const citasService = {
   getAll: async (page = 1, perPage = 20) => {
@@ -14,8 +21,8 @@ export const citasService = {
     return res.data;
   },
 
-  updateEstado: async (id: string, estado: EstadoCita) => {
-    const res = await api.patch<ApiResponse<void>>(`/citas/${id}/estado`, { estado });
+  updateEstado: async (id: string, data: UpdateEstadoData) => {
+    const res = await api.patch<ApiResponse<void>>(`/citas/${id}/estado`, data);
     return res.data;
   },
 };

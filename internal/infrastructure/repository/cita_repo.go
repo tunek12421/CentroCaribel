@@ -28,7 +28,7 @@ func (r *CitaRepository) Create(ctx context.Context, c *domain.Cita) error {
 func (r *CitaRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Cita, error) {
 	var c domain.Cita
 	err := r.db.QueryRowContext(ctx,
-		`SELECT id, paciente_id, fecha, hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
+		`SELECT id, paciente_id, fecha, TO_CHAR(hora, 'HH24:MI') as hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
 		 FROM citas WHERE id = $1`, id).
 		Scan(&c.ID, &c.PacienteID, &c.Fecha, &c.Hora, &c.TipoTratamiento, &c.Estado, &c.Turno, &c.Observaciones, &c.CreatedBy, &c.CreatedAt, &c.UpdatedAt)
 	if err != nil {
@@ -45,7 +45,7 @@ func (r *CitaRepository) GetAll(ctx context.Context, offset, limit int) ([]domai
 	}
 
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, paciente_id, fecha, hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
+		`SELECT id, paciente_id, fecha, TO_CHAR(hora, 'HH24:MI') as hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
 		 FROM citas ORDER BY fecha DESC, hora DESC LIMIT $1 OFFSET $2`, limit, offset)
 	if err != nil {
 		return nil, 0, err
@@ -65,7 +65,7 @@ func (r *CitaRepository) GetAll(ctx context.Context, offset, limit int) ([]domai
 
 func (r *CitaRepository) GetByPacienteID(ctx context.Context, pacienteID uuid.UUID) ([]domain.Cita, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, paciente_id, fecha, hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
+		`SELECT id, paciente_id, fecha, TO_CHAR(hora, 'HH24:MI') as hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
 		 FROM citas WHERE paciente_id = $1 ORDER BY fecha DESC`, pacienteID)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func (r *CitaRepository) GetByPacienteID(ctx context.Context, pacienteID uuid.UU
 
 func (r *CitaRepository) GetByFecha(ctx context.Context, fecha time.Time) ([]domain.Cita, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, paciente_id, fecha, hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
+		`SELECT id, paciente_id, fecha, TO_CHAR(hora, 'HH24:MI') as hora, tipo_tratamiento, estado, turno, observaciones, created_by, created_at, updated_at
 		 FROM citas WHERE fecha = $1 ORDER BY hora`, fecha)
 	if err != nil {
 		return nil, err
@@ -105,5 +105,12 @@ func (r *CitaRepository) GetByFecha(ctx context.Context, fecha time.Time) ([]dom
 
 func (r *CitaRepository) UpdateEstado(ctx context.Context, id uuid.UUID, estado domain.EstadoCita) error {
 	_, err := r.db.ExecContext(ctx, "UPDATE citas SET estado = $1 WHERE id = $2", estado, id)
+	return err
+}
+
+func (r *CitaRepository) Reagendar(ctx context.Context, id uuid.UUID, fecha time.Time, hora string, turno domain.TurnoCita) error {
+	_, err := r.db.ExecContext(ctx,
+		"UPDATE citas SET estado = $1, fecha = $2, hora = $3, turno = $4 WHERE id = $5",
+		domain.EstadoReagendada, fecha, hora, turno, id)
 	return err
 }

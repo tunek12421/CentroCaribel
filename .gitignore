@@ -1,0 +1,21 @@
+# Environment
+.env
+
+# Claude
+.claude/
+
+# Go binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/api
+
+# Dependencies
+/vendor/
+
+# Temp
+/tmp/

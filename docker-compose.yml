@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: caribel_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-caribel}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-caribel_secret_2024}
+      POSTGRES_DB: ${DB_NAME:-centro_caribel}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-caribel}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: caribel_api
+    ports:
+      - "${SERVER_PORT:-8081}:${SERVER_PORT:-8081}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DB_HOST: postgres
+
+volumes:
+  pgdata:

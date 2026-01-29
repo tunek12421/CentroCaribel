@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { pacientesService } from '../../services/pacientes';
@@ -14,14 +14,24 @@ import { PacienteForm } from './PacienteForm';
 export function PacientesPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { hasRole } = useAuthStore();
 
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['pacientes', page],
-    queryFn: () => pacientesService.getAll(page),
+    queryKey: ['pacientes', page, debouncedSearch],
+    queryFn: () => pacientesService.getAll(page, 20, debouncedSearch || undefined),
   });
 
   const createMutation = useMutation({
@@ -35,15 +45,6 @@ export function PacientesPage() {
   const pacientes = data?.data ?? [];
   const meta = data?.meta;
 
-  const filtered = search
-    ? pacientes.filter(
-        (p) =>
-          p.nombre_completo.toLowerCase().includes(search.toLowerCase()) ||
-          p.ci.includes(search) ||
-          p.codigo.toLowerCase().includes(search.toLowerCase())
-      )
-    : pacientes;
-
   if (isLoading) return <Spinner />;
 
   return (
@@ -53,7 +54,7 @@ export function PacientesPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
           <input
             type="text"
-            placeholder="Buscar por nombre, CI o código..."
+            placeholder="Buscar por nombre o CI..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10"
@@ -81,7 +82,7 @@ export function PacientesPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((p) => (
+              {pacientes.map((p) => (
                 <tr key={p.id} className="border-b border-border hover:bg-gray-50/50">
                   <td className="px-6 py-3 font-mono text-xs">{p.codigo}</td>
                   <td className="px-6 py-3 font-medium">{p.nombre_completo}</td>
@@ -95,10 +96,10 @@ export function PacientesPage() {
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
+              {pacientes.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-muted">
-                    No se encontraron pacientes
+                    {debouncedSearch ? 'No se encontraron pacientes con esa búsqueda' : 'No hay pacientes registrados'}
                   </td>
                 </tr>
               )}

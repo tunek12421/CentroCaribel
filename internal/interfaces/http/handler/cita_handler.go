@@ -3,9 +3,11 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/tunek/centro-caribel/internal/application/cita"
+	"github.com/tunek/centro-caribel/internal/domain"
 	"github.com/tunek/centro-caribel/internal/interfaces/http/dto"
 	"github.com/tunek/centro-caribel/internal/interfaces/http/middleware"
 	apperrors "github.com/tunek/centro-caribel/pkg/errors"
@@ -34,7 +36,7 @@ func (h *CitaHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c, err := h.service.Create(r.Context(), req.PacienteID, req.Fecha, req.Hora, req.TipoTratamiento, req.Turno, req.Observaciones, userID)
+	c, err := h.service.Create(r.Context(), req.PacienteID, req.Fecha, req.Hora, req.TipoTratamiento, req.Turno, req.Observaciones, req.PaqueteID, userID)
 	if err != nil {
 		response.Error(w, err)
 		return
@@ -47,7 +49,37 @@ func (h *CitaHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	perPage, _ := strconv.Atoi(r.URL.Query().Get("per_page"))
 
-	citas, total, err := h.service.GetAll(r.Context(), page, perPage)
+	var fechaPtr *time.Time
+	if fechaStr := r.URL.Query().Get("fecha"); fechaStr != "" {
+		f, err := time.Parse("2006-01-02", fechaStr)
+		if err != nil {
+			response.Error(w, apperrors.NewBadRequest("Formato de fecha inválido"))
+			return
+		}
+		fechaPtr = &f
+	}
+
+	var turnoPtr *domain.TurnoCita
+	if turnoStr := r.URL.Query().Get("turno"); turnoStr != "" {
+		t := domain.TurnoCita(turnoStr)
+		if !t.IsValid() {
+			response.Error(w, apperrors.NewBadRequest("Turno inválido"))
+			return
+		}
+		turnoPtr = &t
+	}
+
+	var estadoPtr *domain.EstadoCita
+	if estadoStr := r.URL.Query().Get("estado"); estadoStr != "" {
+		e := domain.EstadoCita(estadoStr)
+		if !e.IsValid() {
+			response.Error(w, apperrors.NewBadRequest("Estado inválido"))
+			return
+		}
+		estadoPtr = &e
+	}
+
+	citas, total, err := h.service.GetAll(r.Context(), page, perPage, fechaPtr, turnoPtr, estadoPtr)
 	if err != nil {
 		response.Error(w, err)
 		return

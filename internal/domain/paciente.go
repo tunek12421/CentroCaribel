@@ -25,6 +25,7 @@ type PacienteRepository interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*Paciente, error)
 	GetByCI(ctx context.Context, ci string) (*Paciente, error)
 	GetAll(ctx context.Context, offset, limit int) ([]Paciente, int64, error)
+	Search(ctx context.Context, query string, offset, limit int) ([]Paciente, int64, error)
 	Update(ctx context.Context, p *Paciente) error
 	NextCodigo(ctx context.Context) (string, error)
 }

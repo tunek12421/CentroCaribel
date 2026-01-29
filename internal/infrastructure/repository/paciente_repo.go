@@ -83,6 +83,36 @@ func (r *PacienteRepository) Update(ctx context.Context, p *domain.Paciente) err
 	return err
 }
 
+func (r *PacienteRepository) Search(ctx context.Context, query string, offset, limit int) ([]domain.Paciente, int64, error) {
+	like := "%" + query + "%"
+
+	var total int64
+	err := r.db.QueryRowContext(ctx,
+		`SELECT COUNT(*) FROM pacientes WHERE unaccent(lower(nombre_completo)) LIKE unaccent(lower($1)) OR ci LIKE $2`, like, like).Scan(&total)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	rows, err := r.db.QueryContext(ctx,
+		`SELECT id, codigo, nombre_completo, ci, fecha_nacimiento, celular, direccion, created_by, created_at, updated_at
+		 FROM pacientes WHERE unaccent(lower(nombre_completo)) LIKE unaccent(lower($1)) OR ci LIKE $2
+		 ORDER BY nombre_completo ASC LIMIT $3 OFFSET $4`, like, like, limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+	defer rows.Close()
+
+	var pacientes []domain.Paciente
+	for rows.Next() {
+		var p domain.Paciente
+		if err := rows.Scan(&p.ID, &p.Codigo, &p.NombreCompleto, &p.CI, &p.FechaNacimiento, &p.Celular, &p.Direccion, &p.CreatedBy, &p.CreatedAt, &p.UpdatedAt); err != nil {
+			return nil, 0, err
+		}
+		pacientes = append(pacientes, p)
+	}
+	return pacientes, total, nil
+}
+
 func (r *PacienteRepository) NextCodigo(ctx context.Context) (string, error) {
 	var seq int
 	err := r.db.QueryRowContext(ctx, "SELECT nextval('pacientes_codigo_seq')").Scan(&seq)

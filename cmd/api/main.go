@@ -15,6 +15,7 @@ import (
 	"github.com/tunek/centro-caribel/internal/application/consentimiento"
 	"github.com/tunek/centro-caribel/internal/application/historia"
 	"github.com/tunek/centro-caribel/internal/application/paciente"
+	"github.com/tunek/centro-caribel/internal/application/paquete"
 	"github.com/tunek/centro-caribel/internal/application/usuario"
 	"github.com/tunek/centro-caribel/internal/domain"
 	"github.com/tunek/centro-caribel/internal/infrastructure/config"
@@ -50,6 +51,8 @@ func main() {
 	consentimientoRepo := repository.NewConsentimientoRepository(db)
 	citaRepo := repository.NewCitaRepository(db)
 	historiaRepo := repository.NewHistoriaClinicaRepository(db)
+	notaRepo := repository.NewNotaEvolucionRepository(db)
+	paqueteRepo := repository.NewPaqueteRepository(db)
 
 	// JWT
 	jwtSvc := jwtinfra.NewService(cfg.JWT.Secret, cfg.JWT.ExpirationHours, cfg.JWT.RefreshExpirationHrs)
@@ -59,8 +62,9 @@ func main() {
 	usuarioSvc := usuario.NewService(usuarioRepo, rolRepo)
 	pacienteSvc := paciente.NewService(pacienteRepo, historiaRepo)
 	consentimientoSvc := consentimiento.NewService(consentimientoRepo, pacienteRepo)
-	citaSvc := cita.NewService(citaRepo, pacienteRepo)
-	historiaSvc := historia.NewService(historiaRepo, pacienteRepo)
+	citaSvc := cita.NewService(citaRepo, pacienteRepo, paqueteRepo)
+	paqueteSvc := paquete.NewService(paqueteRepo, pacienteRepo)
+	historiaSvc := historia.NewService(historiaRepo, notaRepo, pacienteRepo)
 
 	// Seed admin
 	seedAdmin(usuarioRepo, rolRepo, cfg.Admin)
@@ -74,6 +78,7 @@ func main() {
 		Cita:           handler.NewCitaHandler(citaSvc),
 		Historia:       handler.NewHistoriaHandler(historiaSvc),
 		Rol:            handler.NewRolHandler(rolRepo),
+		Paquete:        handler.NewPaqueteHandler(paqueteSvc),
 	}
 
 	mux := router.New(handlers, jwtSvc)

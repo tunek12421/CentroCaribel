@@ -71,7 +71,7 @@ func (s *Service) GetByID(ctx context.Context, id uuid.UUID) (*domain.Paciente, 
 	return pac, nil
 }
 
-func (s *Service) GetAll(ctx context.Context, page, perPage int) ([]domain.Paciente, int64, error) {
+func (s *Service) GetAll(ctx context.Context, page, perPage int, query string) ([]domain.Paciente, int64, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -79,5 +79,9 @@ func (s *Service) GetAll(ctx context.Context, page, perPage int) ([]domain.Pacie
 		perPage = 20
 	}
 	offset := (page - 1) * perPage
+
+	if query != "" {
+		return s.repo.Search(ctx, query, offset, perPage)
+	}
 	return s.repo.GetAll(ctx, offset, perPage)
 }

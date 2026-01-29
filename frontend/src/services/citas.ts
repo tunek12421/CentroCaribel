@@ -8,10 +8,20 @@ export interface UpdateEstadoData {
   turno?: TurnoCita;
 }
 
+export interface CitasFilters {
+  fecha?: string;
+  turno?: TurnoCita;
+  estado?: EstadoCita;
+}
+
 export const citasService = {
-  getAll: async (page = 1, perPage = 20) => {
+  getAll: async (page = 1, perPage = 20, filters?: CitasFilters) => {
     const res = await api.get<ApiResponse<Cita[]>>('/citas', {
-      params: { page, per_page: perPage },
+      params: {
+        page,
+        per_page: perPage,
+        ...filters,
+      },
     });
     return res.data;
   },

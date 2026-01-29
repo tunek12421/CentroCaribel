@@ -47,7 +47,8 @@ func (h *PacienteHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	perPage, _ := strconv.Atoi(r.URL.Query().Get("per_page"))
 
-	pacientes, total, err := h.service.GetAll(r.Context(), page, perPage)
+	query := r.URL.Query().Get("q")
+	pacientes, total, err := h.service.GetAll(r.Context(), page, perPage, query)
 	if err != nil {
 		response.Error(w, err)
 		return

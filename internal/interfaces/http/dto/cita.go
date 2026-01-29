@@ -14,6 +14,7 @@ type CreateCitaRequest struct {
 	TipoTratamiento string           `json:"tipo_tratamiento"`
 	Turno           domain.TurnoCita `json:"turno"`
 	Observaciones   string           `json:"observaciones"`
+	PaqueteID       *uuid.UUID       `json:"paquete_id,omitempty"`
 }
 
 func (r *CreateCitaRequest) Validate() error {

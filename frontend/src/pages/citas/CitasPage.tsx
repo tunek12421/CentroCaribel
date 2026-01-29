@@ -1,24 +1,21 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { citasService } from '../../services/citas';
+import { citasService, type CitasFilters } from '../../services/citas';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { Modal } from '../../components/ui/Modal';
 import { Badge } from '../../components/ui/Badge';
 import { Spinner } from '../../components/ui/Spinner';
-import { Plus } from 'lucide-react';
+import { Plus, Filter, X } from 'lucide-react';
 import { useAuthStore } from '../../store/auth';
 import { ESTADO_COLORS, ESTADO_LABELS, TRANSICIONES_VALIDAS, type EstadoCita, type TurnoCita } from '../../types';
 import { CitaForm } from './CitaForm';
 
 function formatHora(hora: string): string {
   if (!hora) return '';
-  // If it's already HH:MM format, return as-is
   if (/^\d{2}:\d{2}$/.test(hora)) return hora;
-  // If it's ISO format like 0000-01-01T12:12:00Z, extract time
   const match = hora.match(/T(\d{2}:\d{2})/);
   if (match) return match[1];
-  // If it's HH:MM:SS, trim seconds
   const timeParts = hora.match(/^(\d{2}:\d{2}):\d{2}$/);
   if (timeParts) return timeParts[1];
   return hora;
@@ -30,12 +27,17 @@ export function CitasPage() {
   const [estadoModal, setEstadoModal] = useState<{ id: string; estado: EstadoCita } | null>(null);
   const [reagendarForm, setReagendarForm] = useState<{ id: string } | null>(null);
   const [reagendarData, setReagendarData] = useState({ fecha: '', hora: '', turno: 'AM' as TurnoCita });
+  const [filters, setFilters] = useState<CitasFilters>({});
+  const [showFilters, setShowFilters] = useState(false);
   const queryClient = useQueryClient();
   const { hasRole } = useAuthStore();
 
+  const hasActiveFilters = !!(filters.fecha || filters.turno || filters.estado);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['citas', page],
-    queryFn: () => citasService.getAll(page),
+    queryKey: ['citas', page, filters],
+    queryFn: () => citasService.getAll(page, 20, filters),
+    refetchInterval: 30000,
   });
 
   const createMutation = useMutation({
@@ -84,10 +86,38 @@ export function CitasPage() {
     });
   };
 
+  const clearFilters = () => {
+    setFilters({});
+    setPage(1);
+  };
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <p className="text-sm text-muted">{meta?.total ?? 0} citas</p>
+      {/* Info de turnos */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-800">
+        <strong>Turno AM:</strong> Propietaria &nbsp;|&nbsp; <strong>Turno PM:</strong> Lic. Tatiana Mart&iacute;nez
+      </div>
+
+      {/* Header con acciones */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div className="flex items-center gap-2">
+          <p className="text-sm text-muted">{meta?.total ?? 0} citas</p>
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            <Filter className="h-3.5 w-3.5 mr-1" />
+            Filtros
+            {hasActiveFilters && <span className="ml-1 bg-primary text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">!</span>}
+          </Button>
+          {hasActiveFilters && (
+            <Button variant="secondary" size="sm" onClick={clearFilters}>
+              <X className="h-3.5 w-3.5 mr-1" />
+              Limpiar
+            </Button>
+          )}
+        </div>
         {hasRole('Administradora', 'Licenciada') && (
           <Button onClick={() => setShowForm(true)}>
             <Plus className="h-4 w-4 mr-2" />
@@ -96,6 +126,49 @@ export function CitasPage() {
         )}
       </div>
 
+      {/* Barra de filtros */}
+      {showFilters && (
+        <Card className="p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-muted mb-1">Fecha</label>
+              <input
+                type="date"
+                className="w-full"
+                value={filters.fecha ?? ''}
+                onChange={(e) => { setFilters({ ...filters, fecha: e.target.value || undefined }); setPage(1); }}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-muted mb-1">Turno</label>
+              <select
+                className="w-full"
+                value={filters.turno ?? ''}
+                onChange={(e) => { setFilters({ ...filters, turno: (e.target.value || undefined) as TurnoCita | undefined }); setPage(1); }}
+              >
+                <option value="">Todos</option>
+                <option value="AM">AM (Mañana)</option>
+                <option value="PM">PM (Tarde)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-muted mb-1">Estado</label>
+              <select
+                className="w-full"
+                value={filters.estado ?? ''}
+                onChange={(e) => { setFilters({ ...filters, estado: (e.target.value || undefined) as EstadoCita | undefined }); setPage(1); }}
+              >
+                <option value="">Todos</option>
+                {Object.entries(ESTADO_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Tabla de citas */}
       <Card>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -161,6 +234,7 @@ export function CitasPage() {
         )}
       </Card>
 
+      {/* Modal nueva cita */}
       <Modal open={showForm} onClose={() => setShowForm(false)} title="Nueva Cita">
         <CitaForm
           onSubmit={(data) => createMutation.mutate(data)}
@@ -169,11 +243,8 @@ export function CitasPage() {
         />
       </Modal>
 
-      <Modal
-        open={!!estadoModal}
-        onClose={() => setEstadoModal(null)}
-        title="Cambiar Estado de Cita"
-      >
+      {/* Modal cambiar estado */}
+      <Modal open={!!estadoModal} onClose={() => setEstadoModal(null)} title="Cambiar Estado de Cita">
         {estadoModal && (
           <div className="space-y-3">
             <p className="text-sm text-muted">
@@ -197,6 +268,7 @@ export function CitasPage() {
         )}
       </Modal>
 
+      {/* Modal reagendar */}
       <Modal
         open={!!reagendarForm}
         onClose={() => {
@@ -210,7 +282,7 @@ export function CitasPage() {
             <p className="text-sm text-muted">
               Ingrese la nueva fecha y hora para la cita:
             </p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Fecha *</label>
                 <input

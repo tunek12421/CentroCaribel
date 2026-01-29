@@ -69,6 +69,7 @@ type Cita struct {
 	Estado          EstadoCita `json:"estado"`
 	Turno           TurnoCita  `json:"turno"`
 	Observaciones   string     `json:"observaciones,omitempty"`
+	PaqueteID       *uuid.UUID `json:"paquete_id,omitempty"`
 	CreatedBy       uuid.UUID  `json:"created_by"`
 	CreatedAt       time.Time  `json:"created_at"`
 	UpdatedAt       time.Time  `json:"updated_at"`
@@ -82,4 +83,6 @@ type CitaRepository interface {
 	GetByFecha(ctx context.Context, fecha time.Time) ([]Cita, error)
 	UpdateEstado(ctx context.Context, id uuid.UUID, estado EstadoCita) error
 	Reagendar(ctx context.Context, id uuid.UUID, fecha time.Time, hora string, turno TurnoCita) error
+	GetAllFiltered(ctx context.Context, offset, limit int, fecha *time.Time, turno *TurnoCita, estado *EstadoCita) ([]Cita, int64, error)
+	ExistsByFechaHora(ctx context.Context, fecha time.Time, hora string, excludeID *uuid.UUID) (bool, error)
 }

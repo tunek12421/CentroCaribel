@@ -99,8 +99,33 @@ export interface HistoriaClinica {
   paciente_id: string;
   numero_historia: string;
   estado: string;
+  antecedentes_personales: string;
+  antecedentes_familiares: string;
+  alergias: string;
+  medicamentos_actuales: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface NotaEvolucion {
+  id: string;
+  historia_id: string;
+  tipo: 'TRATAMIENTO' | 'EVOLUCION' | 'NOTA';
+  contenido: string;
+  created_by: string;
+  created_at: string;
+}
+
+export interface UpdateAntecedentesRequest {
+  antecedentes_personales: string;
+  antecedentes_familiares: string;
+  alergias: string;
+  medicamentos_actuales: string;
+}
+
+export interface CreateNotaRequest {
+  tipo: 'TRATAMIENTO' | 'EVOLUCION' | 'NOTA';
+  contenido: string;
 }
 
 export type EstadoCita =
@@ -123,6 +148,7 @@ export interface Cita {
   estado: EstadoCita;
   turno: TurnoCita;
   observaciones?: string;
+  paquete_id?: string;
   created_by: string;
   created_at: string;
   updated_at: string;
@@ -135,6 +161,27 @@ export interface CreateCitaRequest {
   tipo_tratamiento: string;
   turno: TurnoCita;
   observaciones?: string;
+  paquete_id?: string;
+}
+
+export interface PaqueteTratamiento {
+  id: string;
+  paciente_id: string;
+  tipo_tratamiento: string;
+  total_sesiones: number;
+  sesiones_completadas: number;
+  estado: 'ACTIVO' | 'COMPLETADO' | 'CANCELADO';
+  notas?: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreatePaqueteRequest {
+  paciente_id: string;
+  tipo_tratamiento: string;
+  total_sesiones: number;
+  notas?: string;
 }
 
 export const TRANSICIONES_VALIDAS: Record<EstadoCita, EstadoCita[]> = {

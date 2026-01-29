@@ -6,12 +6,15 @@ import type {
   Consentimiento,
   CreateConsentimientoRequest,
   HistoriaClinica,
+  NotaEvolucion,
+  UpdateAntecedentesRequest,
+  CreateNotaRequest,
 } from '../types';
 
 export const pacientesService = {
-  getAll: async (page = 1, perPage = 20) => {
+  getAll: async (page = 1, perPage = 20, query?: string) => {
     const res = await api.get<ApiResponse<Paciente[]>>('/pacientes', {
-      params: { page, per_page: perPage },
+      params: { page, per_page: perPage, ...(query ? { q: query } : {}) },
     });
     return res.data;
   },
@@ -44,6 +47,29 @@ export const pacientesService = {
   getHistoria: async (pacienteId: string) => {
     const res = await api.get<ApiResponse<HistoriaClinica>>(
       `/pacientes/${pacienteId}/historia`
+    );
+    return res.data;
+  },
+
+  updateAntecedentes: async (pacienteId: string, data: UpdateAntecedentesRequest) => {
+    const res = await api.put<ApiResponse<HistoriaClinica>>(
+      `/pacientes/${pacienteId}/historia/antecedentes`,
+      data
+    );
+    return res.data;
+  },
+
+  getNotas: async (pacienteId: string) => {
+    const res = await api.get<ApiResponse<NotaEvolucion[]>>(
+      `/pacientes/${pacienteId}/historia/notas`
+    );
+    return res.data;
+  },
+
+  createNota: async (pacienteId: string, data: CreateNotaRequest) => {
+    const res = await api.post<ApiResponse<NotaEvolucion>>(
+      `/pacientes/${pacienteId}/historia/notas`,
+      data
     );
     return res.data;
   },

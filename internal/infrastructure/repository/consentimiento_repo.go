@@ -38,7 +38,7 @@ func (r *ConsentimientoRepository) GetByID(ctx context.Context, id uuid.UUID) (*
 
 func (r *ConsentimientoRepository) GetByPacienteID(ctx context.Context, pacienteID uuid.UUID) ([]domain.Consentimiento, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT id, paciente_id, fecha_firma, autoriza_fotos, contenido, registrado_por, created_at
+		`SELECT id, paciente_id, fecha_firma, firma_digital, autoriza_fotos, contenido, registrado_por, created_at
 		 FROM consentimientos WHERE paciente_id = $1 ORDER BY created_at DESC`, pacienteID)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (r *ConsentimientoRepository) GetByPacienteID(ctx context.Context, paciente
 	var list []domain.Consentimiento
 	for rows.Next() {
 		var c domain.Consentimiento
-		if err := rows.Scan(&c.ID, &c.PacienteID, &c.FechaFirma, &c.AutorizaFotos, &c.Contenido, &c.RegistradoPor, &c.CreatedAt); err != nil {
+		if err := rows.Scan(&c.ID, &c.PacienteID, &c.FechaFirma, &c.FirmaDigital, &c.AutorizaFotos, &c.Contenido, &c.RegistradoPor, &c.CreatedAt); err != nil {
 			return nil, err
 		}
 		list = append(list, c)

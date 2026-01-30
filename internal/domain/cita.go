@@ -63,6 +63,7 @@ func (t TurnoCita) IsValid() bool {
 type Cita struct {
 	ID              uuid.UUID  `json:"id"`
 	PacienteID      uuid.UUID  `json:"paciente_id"`
+	PacienteNombre  string     `json:"paciente_nombre,omitempty"`
 	Fecha           time.Time  `json:"fecha"`
 	Hora            string     `json:"hora"`
 	TipoTratamiento string     `json:"tipo_tratamiento"`

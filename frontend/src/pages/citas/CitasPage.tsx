@@ -174,10 +174,11 @@ export function CitasPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-gray-50/50">
+                <th className="text-left px-6 py-3 font-medium text-muted">Paciente</th>
                 <th className="text-left px-6 py-3 font-medium text-muted">Fecha</th>
                 <th className="text-left px-6 py-3 font-medium text-muted">Hora</th>
                 <th className="text-left px-6 py-3 font-medium text-muted hidden sm:table-cell">Turno</th>
-                <th className="text-left px-6 py-3 font-medium text-muted">Tratamiento</th>
+                <th className="text-left px-6 py-3 font-medium text-muted hidden md:table-cell">Tratamiento</th>
                 <th className="text-left px-6 py-3 font-medium text-muted">Estado</th>
                 <th className="text-right px-6 py-3 font-medium text-muted">Acción</th>
               </tr>
@@ -187,6 +188,7 @@ export function CitasPage() {
                 const transiciones = TRANSICIONES_VALIDAS[c.estado] ?? [];
                 return (
                   <tr key={c.id} className="border-b border-border hover:bg-gray-50/50">
+                    <td className="px-6 py-3 font-medium">{c.paciente_nombre}</td>
                     <td className="px-6 py-3">{new Date(c.fecha).toLocaleDateString('es-BO')}</td>
                     <td className="px-6 py-3">{formatHora(c.hora)}</td>
                     <td className="px-6 py-3 hidden sm:table-cell">
@@ -194,7 +196,7 @@ export function CitasPage() {
                         {c.turno}
                       </Badge>
                     </td>
-                    <td className="px-6 py-3">{c.tipo_tratamiento}</td>
+                    <td className="px-6 py-3 hidden md:table-cell">{c.tipo_tratamiento}</td>
                     <td className="px-6 py-3">
                       <Badge className={ESTADO_COLORS[c.estado]}>{ESTADO_LABELS[c.estado]}</Badge>
                     </td>
@@ -214,7 +216,7 @@ export function CitasPage() {
               })}
               {citas.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-muted">
+                  <td colSpan={7} className="px-6 py-8 text-center text-muted">
                     No hay citas registradas
                   </td>
                 </tr>

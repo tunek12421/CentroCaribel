@@ -142,6 +142,7 @@ export type TurnoCita = 'AM' | 'PM';
 export interface Cita {
   id: string;
   paciente_id: string;
+  paciente_nombre?: string;
   fecha: string;
   hora: string;
   tipo_tratamiento: string;

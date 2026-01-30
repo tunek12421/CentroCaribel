@@ -18,11 +18,12 @@ func NewCitaRepository(db *sql.DB) *CitaRepository {
 	return &CitaRepository{db: db}
 }
 
-const citaColumns = `id, paciente_id, fecha, TO_CHAR(hora, 'HH24:MI') as hora, tipo_tratamiento, estado, turno, observaciones, paquete_id, created_by, created_at, updated_at`
+const citaColumns = `c.id, c.paciente_id, p.nombre_completo, c.fecha, TO_CHAR(c.hora, 'HH24:MI') as hora, c.tipo_tratamiento, c.estado, c.turno, c.observaciones, c.paquete_id, c.created_by, c.created_at, c.updated_at`
+const citaFrom = `citas c JOIN pacientes p ON c.paciente_id = p.id`
 
 func scanCita(row interface{ Scan(dest ...any) error }) (domain.Cita, error) {
 	var c domain.Cita
-	err := row.Scan(&c.ID, &c.PacienteID, &c.Fecha, &c.Hora, &c.TipoTratamiento, &c.Estado, &c.Turno, &c.Observaciones, &c.PaqueteID, &c.CreatedBy, &c.CreatedAt, &c.UpdatedAt)
+	err := row.Scan(&c.ID, &c.PacienteID, &c.PacienteNombre, &c.Fecha, &c.Hora, &c.TipoTratamiento, &c.Estado, &c.Turno, &c.Observaciones, &c.PaqueteID, &c.CreatedBy, &c.CreatedAt, &c.UpdatedAt)
 	return c, err
 }
 
@@ -36,7 +37,7 @@ func (r *CitaRepository) Create(ctx context.Context, c *domain.Cita) error {
 
 func (r *CitaRepository) GetByID(ctx context.Context, id uuid.UUID) (*domain.Cita, error) {
 	c, err := scanCita(r.db.QueryRowContext(ctx,
-		`SELECT `+citaColumns+` FROM citas WHERE id = $1`, id))
+		`SELECT `+citaColumns+` FROM `+citaFrom+` WHERE c.id = $1`, id))
 	if err != nil {
 		return nil, err
 	}
@@ -53,17 +54,17 @@ func (r *CitaRepository) GetAllFiltered(ctx context.Context, offset, limit int, 
 	argIdx := 1
 
 	if fecha != nil {
-		where += fmt.Sprintf(" AND fecha = $%d", argIdx)
+		where += fmt.Sprintf(" AND c.fecha = $%d", argIdx)
 		args = append(args, *fecha)
 		argIdx++
 	}
 	if turno != nil {
-		where += fmt.Sprintf(" AND turno = $%d", argIdx)
+		where += fmt.Sprintf(" AND c.turno = $%d", argIdx)
 		args = append(args, *turno)
 		argIdx++
 	}
 	if estado != nil {
-		where += fmt.Sprintf(" AND estado = $%d", argIdx)
+		where += fmt.Sprintf(" AND c.estado = $%d", argIdx)
 		args = append(args, *estado)
 		argIdx++
 	}
@@ -71,14 +72,14 @@ func (r *CitaRepository) GetAllFiltered(ctx context.Context, offset, limit int, 
 	var total int64
 	countArgs := make([]interface{}, len(args))
 	copy(countArgs, args)
-	err := r.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM citas "+where, countArgs...).Scan(&total)
+	err := r.db.QueryRowContext(ctx, "SELECT COUNT(*) FROM "+citaFrom+" "+where, countArgs...).Scan(&total)
 	if err != nil {
 		return nil, 0, err
 	}
 
 	query := fmt.Sprintf(
-		`SELECT %s FROM citas %s ORDER BY fecha DESC, hora DESC LIMIT $%d OFFSET $%d`,
-		citaColumns, where, argIdx, argIdx+1)
+		`SELECT %s FROM %s %s ORDER BY c.fecha DESC, c.hora DESC LIMIT $%d OFFSET $%d`,
+		citaColumns, citaFrom, where, argIdx, argIdx+1)
 	args = append(args, limit, offset)
 
 	rows, err := r.db.QueryContext(ctx, query, args...)
@@ -100,7 +101,7 @@ func (r *CitaRepository) GetAllFiltered(ctx context.Context, offset, limit int, 
 
 func (r *CitaRepository) GetByPacienteID(ctx context.Context, pacienteID uuid.UUID) ([]domain.Cita, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT `+citaColumns+` FROM citas WHERE paciente_id = $1 ORDER BY fecha DESC`, pacienteID)
+		`SELECT `+citaColumns+` FROM `+citaFrom+` WHERE c.paciente_id = $1 ORDER BY c.fecha DESC`, pacienteID)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +120,7 @@ func (r *CitaRepository) GetByPacienteID(ctx context.Context, pacienteID uuid.UU
 
 func (r *CitaRepository) GetByFecha(ctx context.Context, fecha time.Time) ([]domain.Cita, error) {
 	rows, err := r.db.QueryContext(ctx,
-		`SELECT `+citaColumns+` FROM citas WHERE fecha = $1 ORDER BY hora`, fecha)
+		`SELECT `+citaColumns+` FROM `+citaFrom+` WHERE c.fecha = $1 ORDER BY c.hora`, fecha)
 	if err != nil {
 		return nil, err
 	}

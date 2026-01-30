@@ -385,6 +385,16 @@ export function PacienteDetailPage() {
                     </Badge>
                   </div>
                   <p className="text-sm">{c.contenido}</p>
+                  {c.firma_digital && (
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <p className="text-xs text-muted mb-1">Firma del paciente:</p>
+                      <img
+                        src={`data:image/png;base64,${c.firma_digital}`}
+                        alt="Firma del paciente"
+                        className="max-h-24 border border-border rounded bg-white"
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Centro Caribel - Presentacion</title>
+    <link rel="stylesheet" href="dist/reset.css">
+    <link rel="stylesheet" href="dist/reveal.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides" id="slides-container">
+            <section>
+                <h2>Cargando presentacion...</h2>
+            </section>
+        </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script>
+        async function loadSlides() {
+            const container = document.getElementById('slides-container');
+
+            try {
+                const response = await fetch('slides/proyecto-centro-caribel.html');
+                if (response.ok) {
+                    container.innerHTML = await response.text();
+                }
+            } catch (error) {
+                console.error('Error cargando slides:', error);
+            }
+
+            Reveal.initialize({
+                width: 1280,
+                height: 720,
+                margin: 0.1,
+                controls: true,
+                progress: true,
+                slideNumber: false,
+                hash: true,
+                center: true,
+                transition: 'slide',
+                plugins: [ RevealNotes ]
+            });
+        }
+
+        loadSlides();
+    </script>
+</body>
+</html>

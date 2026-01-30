@@ -1,0 +1,546 @@
+<!-- ============================================
+     JORGE (Slides 1-5): Introduccion general
+     ============================================ -->
+
+<!-- SEPARADOR -->
+<section class="proyecto-separador">
+    <div class="proyecto-num">Proyecto Final &mdash; Desarrollo de Software</div>
+    <h1>Centro Caribel</h1>
+    <p class="proyecto-autor">Sistema de Gestion para Centro de Fisioterapia Estetica</p>
+</section>
+
+<!-- PORTADA -->
+<section class="portada">
+    <div style="display: flex; align-items: flex-start; gap: 1.5em;">
+        <img src="img/logo_upds.png" alt="UPDS" style="height: 100px; flex-shrink: 0;">
+        <div>
+            <h1>Sistema Web para la Gestion Integral de un Centro de Fisioterapia Estetica</h1>
+            <p class="subtitle">Actividad 10 &mdash; Proyecto Final</p>
+        </div>
+    </div>
+    <div class="info">
+        <p><strong>Integrantes:</strong> Benavides Jorge, Argote Marco, Lujan Enrique, Lujan William, Mejillones Rebeca</p>
+        <p><strong>Docente:</strong> Ing. Gabriela Iturri Coca</p>
+        <p><strong>Institucion:</strong> Universidad Privada Domingo Savio (UPDS) &mdash; Cochabamba, Bolivia</p>
+        <p><strong>Gestion:</strong> 2026</p>
+    </div>
+    <aside class="notes">
+        Presentar al equipo brevemente. Mencionar que el proyecto nace de una necesidad real: el Centro Caribel opera con registros manuales y necesita digitalizar sus procesos clinicos y administrativos.
+    </aside>
+</section>
+
+<!-- RESUMEN DEL PROYECTO -->
+<section>
+    <h2>Resumen del Proyecto</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5em; margin-top: 1.5em;">
+        <div style="background: #f5f5f5; padding: 1.2em; border-radius: 4px; border-top: 3px solid #333; text-align: center;">
+            <p style="font-size: 2em; font-weight: 700; margin: 0; color: #222;">1</p>
+            <p style="font-size: 0.6em; margin: 0.3em 0 0 0; color: #555;">Entrevista realizada</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 1.2em; border-radius: 4px; border-top: 3px solid #333; text-align: center;">
+            <p style="font-size: 2em; font-weight: 700; margin: 0; color: #222;">4</p>
+            <p style="font-size: 0.6em; margin: 0.3em 0 0 0; color: #555;">Actores del sistema</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 1.2em; border-radius: 4px; border-top: 3px solid #333; text-align: center;">
+            <p style="font-size: 2em; font-weight: 700; margin: 0; color: #222;">9</p>
+            <p style="font-size: 0.6em; margin: 0.3em 0 0 0; color: #555;">Procesos de negocio</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 1.2em; border-radius: 4px; border-top: 3px solid #333; text-align: center;">
+            <p style="font-size: 2em; font-weight: 700; margin: 0; color: #222;">12</p>
+            <p style="font-size: 0.6em; margin: 0.3em 0 0 0; color: #555;">Historias de usuario</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 1.2em; border-radius: 4px; border-top: 3px solid #333; text-align: center;">
+            <p style="font-size: 2em; font-weight: 700; margin: 0; color: #222;">3</p>
+            <p style="font-size: 0.6em; margin: 0.3em 0 0 0; color: #555;">Sprints planificados</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 1.2em; border-radius: 4px; border-top: 3px solid #333; text-align: center;">
+            <p style="font-size: 2em; font-weight: 700; margin: 0; color: #222;">6</p>
+            <p style="font-size: 0.6em; margin: 0.3em 0 0 0; color: #555;">Diagramas UML</p>
+        </div>
+    </div>
+    <aside class="notes">
+        Se realizo 1 entrevista con la propietaria Caridad Arispe Jaimes. Se identificaron 4 actores, 9 procesos de negocio y se definieron 12 historias de usuario distribuidas en 3 sprints. Se elaboraron 6 diagramas UML: despliegue, clases y 4 de estados.
+    </aside>
+</section>
+
+<!-- POR QUE SPRINT 1 PRIMERO -->
+<section>
+    <h2>Por que el Sprint 1 es primero</h2>
+    <div style="margin-top: 1em;">
+        <div class="item-num">
+            <div class="item-num-titulo">Prerrequisitos tecnicos</div>
+            <div class="item-num-texto">La arquitectura, base de datos y autenticacion son necesarios para todo lo demas</div>
+        </div>
+        <div class="item-num">
+            <div class="item-num-titulo">Dependencias funcionales</div>
+            <div class="item-num-texto">Sin pacientes registrados no hay citas, consentimientos ni historias clinicas</div>
+        </div>
+        <div class="item-num">
+            <div class="item-num-titulo">Prioridad del stakeholder</div>
+            <div class="item-num-texto">La propietaria priorizo: registro de pacientes, control financiero y agendamiento</div>
+        </div>
+        <div class="item-num">
+            <div class="item-num-titulo">Cumplimiento normativo</div>
+            <div class="item-num-texto">El consentimiento informado es obligatorio por Ley 3131 antes de cualquier tratamiento</div>
+        </div>
+    </div>
+    <aside class="notes">
+        Este no es un sprint cualquiera, es el cimiento del proyecto. Definimos la arquitectura cliente-servidor de 3 capas, la base de datos y la seguridad. Todo lo que viene despues depende de esto. La Ley 3131 exige consentimiento informado antes de cualquier procedimiento medico.
+    </aside>
+</section>
+
+<!-- SPRINT 1: OBJETIVO + HISTORIAS -->
+<section>
+    <h2>Sprint 1 &mdash; Objetivo e Historias</h2>
+    <div class="destacado-central" style="margin: 0.5em 0;">
+        <p>Establecer la base tecnica y las operaciones fundamentales: registro de pacientes, agendamiento de citas, historias clinicas, consentimientos y control de acceso por roles.</p>
+    </div>
+    <div style="margin-top: 0.5em;">
+        <table style="width: 100%; font-size: 0.5em; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #333;">
+                    <th style="text-align: left; padding: 0.4em; color: #333;">Codigo</th>
+                    <th style="text-align: left; padding: 0.4em; color: #333;">Historia de Usuario</th>
+                    <th style="text-align: left; padding: 0.4em; color: #333;">Responsable</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.4em; font-weight: 600;">AB-01</td>
+                    <td style="padding: 0.4em;">Arquitectura Cliente-Servidor 3 Capas</td>
+                    <td style="padding: 0.4em;">Equipo</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.4em; font-weight: 600;">MB-01</td>
+                    <td style="padding: 0.4em;">Modelado de Flujos de Estados</td>
+                    <td style="padding: 0.4em;">Equipo</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.4em; font-weight: 600;">HU-CIT-001</td>
+                    <td style="padding: 0.4em;">Agendar citas</td>
+                    <td style="padding: 0.4em;">Enrique</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.4em; font-weight: 600;">HU-PAC-001</td>
+                    <td style="padding: 0.4em;">Registrar paciente nuevo</td>
+                    <td style="padding: 0.4em;">Marco</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.4em; font-weight: 600;">HU-PAC-002</td>
+                    <td style="padding: 0.4em;">Gestionar consentimiento informado</td>
+                    <td style="padding: 0.4em;">Rebeca</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.4em; font-weight: 600;">HU-PAC-003</td>
+                    <td style="padding: 0.4em;">Consultar historia clinica</td>
+                    <td style="padding: 0.4em;">William</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.4em; font-weight: 600;">HU-ADM-001</td>
+                    <td style="padding: 0.4em;">Gestionar usuarios del sistema</td>
+                    <td style="padding: 0.4em;">Rebeca</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <aside class="notes">
+        Son 7 items: 2 tecnicos (arquitectura y modelado, responsabilidad del equipo completo) y 5 historias de usuario con responsable individual. Fecha limite: 24/01/2026.
+    </aside>
+</section>
+
+<!-- ============================================
+     MARCO (Slides 6-9): Arquitectura + HU-PAC-001
+     ============================================ -->
+
+<!-- ACTORES DEL SISTEMA -->
+<section>
+    <h2>Actores del Sistema</h2>
+    <div class="grid-simple">
+        <div class="item-num">
+            <div class="item-num-titulo">Administradora (Propietaria)</div>
+            <div class="item-num-texto">Turno manana. Acceso total. Precios, reportes, usuarios, descuentos.</div>
+        </div>
+        <div class="item-num">
+            <div class="item-num-titulo">Licenciada (Fisioterapeuta)</div>
+            <div class="item-num-texto">Turno tarde. Historias clinicas, citas, pagos, evaluaciones, tratamientos.</div>
+        </div>
+        <div class="item-num">
+            <div class="item-num-titulo">Interno (Estudiante)</div>
+            <div class="item-num-texto">Rotativo. Registro basico, consulta de agenda, apoyo supervisado.</div>
+        </div>
+        <div class="item-num">
+            <div class="item-num-titulo">Medico General</div>
+            <div class="item-num-texto">Eventual. Evaluaciones de base, notas de evolucion, autorizaciones.</div>
+        </div>
+    </div>
+    <aside class="notes">
+        Cada actor tiene permisos diferenciados. La propietaria necesita usar el movil y las licenciadas la PC; la arquitectura web resuelve ambos casos. El control por roles cumple con la confidencialidad medica de la Ley 3131.
+    </aside>
+</section>
+
+<!-- DIAGRAMA DE DESPLIEGUE -->
+<section>
+    <h2>Diagrama de Despliegue UML</h2>
+    <p style="font-size: 0.55em; color: #555;">Arquitectura Cliente-Servidor de 3 Capas (Sommerville, 2011)</p>
+    <div style="text-align: center; margin-top: 0.5em;">
+        <img src="img/despliegue_uml.png" alt="Diagrama de Despliegue UML" style="max-height: 480px; border: 1px solid #e0e0e0; border-radius: 4px;">
+    </div>
+    <aside class="notes">
+        Elegimos Cliente-Servidor de 3 Capas (Presentacion, Logica, Datos). Segun Sommerville, distribuye procesamiento y datos eficientemente. Nodos fisicos: Cliente Web (Navegador), Dispositivo Movil, Servidor de Aplicacion (Go) via TCP/SQL con PostgreSQL. El backend centraliza la seguridad. Al separar capas, si necesitamos cambiar la BD o la interfaz, podemos hacerlo sin reescribir todo.
+    </aside>
+</section>
+
+<!-- DIAGRAMA DE CLASES -->
+<section>
+    <h2>Diagrama de Clases UML &mdash; Sprint 1</h2>
+    <p style="font-size: 0.55em; color: #555;">Modelo de datos del Sprint 1 (OMG UML 2.5, 2015)</p>
+    <div style="text-align: center; margin-top: 0.5em;">
+        <img src="img/clases_uml.png" alt="Diagrama de Clases UML" style="max-height: 480px; border: 1px solid #e0e0e0; border-radius: 4px;">
+    </div>
+    <aside class="notes">
+        6 entidades principales: Rol, Usuario, Paciente, Cita, Consentimiento, HistoriaClinica. Relaciones: Paciente 1-* Cita, Paciente 1-1 Historia, Paciente 1-* Consentimiento, Usuario *-1 Rol. Todas usan UUID como PK y tienen timestamps automaticos. El enum EstadoCita define los 7 estados posibles.
+    </aside>
+</section>
+
+<!-- HU-PAC-001: MARCO -->
+<section>
+    <h2>HU-PAC-001 &mdash; Registrar Paciente</h2>
+    <p style="font-size: 0.55em; color: #555;"><strong>Responsable: Marco</strong> &nbsp;|&nbsp; Como Licenciada, puedo registrar pacientes nuevos</p>
+    <div class="tabla-2col" style="margin-top: 0.5em;">
+        <div class="tabla-row">
+            <div class="tabla-cell tabla-cell-left">
+                <h3>Criterios de Aceptacion</h3>
+                <ul style="font-size: 0.55em;">
+                    <li>Registrar nombre, CI, celular, fecha nac.</li>
+                    <li>Codigo unico automatico (PAC-0001)</li>
+                    <li>CI unico &mdash; alerta si ya existe</li>
+                    <li>Busqueda por nombre o CI</li>
+                </ul>
+            </div>
+            <div class="tabla-cell">
+                <h3>Codigo (3 Capas)</h3>
+                <ul style="font-size: 0.5em;">
+                    <li><strong>Frontend:</strong> PacienteForm.tsx &mdash; Formulario + validacion</li>
+                    <li><strong>Service:</strong> paciente/service.go &mdash; Valida CI unico, genera codigo</li>
+                    <li><strong>Repository:</strong> paciente_repo.go &mdash; INSERT + NextCodigo()</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <aside class="notes">
+        FLUJO: Frontend captura datos demograficos. Backend verifica si el CI ya existe (GetByCI) para evitar duplicados. Genera automaticamente el codigo PAC-XXXX. Crea la Historia Clinica automaticamente en el mismo acto: el paciente nace con expediente. ARGUMENTO: Automatizamos la creacion de historia clinica y codigo para reducir carga administrativa y evitar errores humanos.
+    </aside>
+</section>
+
+<!-- ============================================
+     ENRIQUE (Slides 10-13): Estados Cita/Paquete + HU-CIT-001 + Modelado BD
+     ============================================ -->
+
+<!-- DIAGRAMA DE ESTADOS: CITA -->
+<section>
+    <h2>Diagrama de Estados &mdash; Cita</h2>
+    <div style="text-align: center; margin-top: 0.5em;">
+        <img src="img/estado_cita.png" alt="Diagrama de Estados: Cita" style="max-height: 400px; border: 1px solid #e0e0e0; border-radius: 4px;">
+    </div>
+    <p style="font-size: 0.5em; color: #555; text-align: center; margin-top: 0.5em;">7 estados: Nueva, Agendada, Confirmada, Atendida, No Asistio, Cancelada, Reagendada</p>
+    <aside class="notes">
+        Usamos Maquinas de Estados Finitos para modelar el ciclo de vida. Una cita nace 'Nueva', pasa a 'Agendada' y finaliza como 'Atendida' o 'No Asistio'. El estado 'Reagendada' permite cambiar fecha/hora sin perder el registro original. Las transiciones son validadas en el backend para evitar datos inconsistentes.
+    </aside>
+</section>
+
+<!-- DIAGRAMA DE ESTADOS: PAQUETE -->
+<section>
+    <h2>Diagrama de Estados &mdash; Paquete de Tratamiento</h2>
+    <div style="text-align: center; margin-top: 0.5em;">
+        <img src="img/estado_paquete.png" alt="Diagrama de Estados: Paquete" style="max-height: 400px; border: 1px solid #e0e0e0; border-radius: 4px;">
+    </div>
+    <p style="font-size: 0.5em; color: #555; text-align: center; margin-top: 0.5em;">5 estados: Disponible, Asignado, En Progreso, Completado, Vencido</p>
+    <aside class="notes">
+        Los paquetes controlan las sesiones de tratamiento. El estado 'En Progreso' lleva un contador de sesiones (n/total). Cada vez que se marca una cita como 'Atendida' vinculada al paquete, el contador se incrementa. Al completar todas las sesiones, pasa automaticamente a 'Completado'. Si expira sin completar, queda 'Vencido'.
+    </aside>
+</section>
+
+<!-- HU-CIT-001: ENRIQUE -->
+<section>
+    <h2>HU-CIT-001 &mdash; Agendar Citas</h2>
+    <p style="font-size: 0.55em; color: #555;"><strong>Responsable: Enrique</strong> &nbsp;|&nbsp; Como Administradora/Licenciada, puedo programar citas</p>
+    <div class="tabla-2col" style="margin-top: 0.5em;">
+        <div class="tabla-row">
+            <div class="tabla-cell tabla-cell-left">
+                <h3>Criterios de Aceptacion</h3>
+                <ul style="font-size: 0.55em;">
+                    <li>Registrar cita con fecha, hora y tratamiento</li>
+                    <li>Estado inicial: <strong>NUEVA</strong></li>
+                    <li>Flujo de 7 estados con transiciones validadas</li>
+                    <li>Reagendamiento con nueva fecha/hora</li>
+                </ul>
+            </div>
+            <div class="tabla-cell">
+                <h3>Codigo (3 Capas)</h3>
+                <ul style="font-size: 0.5em;">
+                    <li><strong>Frontend:</strong> CitasPage.tsx &mdash; Lista + filtros + formulario</li>
+                    <li><strong>Service:</strong> cita/service.go &mdash; Valida paciente, crea con estado NUEVA</li>
+                    <li><strong>Repository:</strong> cita_repo.go &mdash; INSERT INTO citas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <aside class="notes">
+        FLUJO: Frontend usa useQuery para cargar la agenda de forma asincrona. Backend valida que el paciente exista (pacienteRepo.GetByID) antes de crear. Se inserta con estado inicial NUEVA mediante SQL parametrizado. ARGUMENTO: No permitimos citas huerfanas. La validacion de integridad referencial en el servicio asegura que toda cita pertenezca a un paciente real.
+    </aside>
+</section>
+
+<!-- MODELADO BD -->
+<section>
+    <h2>Modelado de la Base de Datos</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5em; margin-top: 1em;">
+        <div>
+            <h3>Tablas Sprint 1</h3>
+            <ul style="font-size: 0.55em;">
+                <li><strong>roles</strong> &mdash; 4 roles predefinidos</li>
+                <li><strong>usuarios</strong> &mdash; email unico, hash bcrypt</li>
+                <li><strong>pacientes</strong> &mdash; codigo secuencial, CI unico</li>
+                <li><strong>historias_clinicas</strong> &mdash; numero secuencial, antecedentes</li>
+                <li><strong>notas_evolucion</strong> &mdash; 3 tipos (Tratamiento, Evolucion, Nota)</li>
+                <li><strong>consentimientos</strong> &mdash; firma bytea, autoriza_fotos</li>
+                <li><strong>citas</strong> &mdash; 7 estados, turno AM/PM</li>
+                <li><strong>paquetes_tratamiento</strong> &mdash; sesiones completadas/total</li>
+            </ul>
+        </div>
+        <div>
+            <h3>Caracteristicas</h3>
+            <ul style="font-size: 0.55em;">
+                <li>UUID como primary key (no secuencial)</li>
+                <li>Secuencias SQL para codigos (PAC-0001, HC-0001)</li>
+                <li>Extension <strong>unaccent</strong> para busqueda sin acentos</li>
+                <li>Foreign keys con integridad referencial</li>
+                <li>Timestamps automaticos (created_at, updated_at)</li>
+                <li>4 archivos de migracion SQL</li>
+            </ul>
+        </div>
+    </div>
+    <aside class="notes">
+        Usamos UUID en vez de IDs secuenciales por seguridad (no se pueden adivinar). Las secuencias SQL generan codigos legibles para humanos (PAC-0001, HC-0001). La extension unaccent permite buscar "Jose" y encontrar "Jose" sin importar acentos. Las migraciones SQL permiten versionar la base de datos y reproducir el esquema en cualquier entorno.
+    </aside>
+</section>
+
+<!-- ============================================
+     WILLIAM (Slides 14-17): Estados Ficha/Pago + HU-PAC-003 + Demo
+     ============================================ -->
+
+<!-- DIAGRAMA DE ESTADOS: FICHA CLINICA -->
+<section>
+    <h2>Diagrama de Estados &mdash; Ficha Clinica</h2>
+    <div style="text-align: center; margin-top: 0.5em;">
+        <img src="img/estado_ficha.png" alt="Diagrama de Estados: Ficha Clinica" style="max-height: 400px; border: 1px solid #e0e0e0; border-radius: 4px;">
+    </div>
+    <p style="font-size: 0.5em; color: #555; text-align: center; margin-top: 0.5em;">4 estados: Borrador, En Evaluacion, Completa, Firmada</p>
+    <aside class="notes">
+        Controlamos que la ficha pase de 'Borrador' a 'Firmada' para asegurar la validez legal. La ficha no se puede modificar una vez firmada. Esto cumple con los requisitos de la Ley 3131 sobre documentacion clinica.
+    </aside>
+</section>
+
+<!-- DIAGRAMA DE ESTADOS: PAGO -->
+<section>
+    <h2>Diagrama de Estados &mdash; Pago</h2>
+    <div style="text-align: center; margin-top: 0.5em;">
+        <img src="img/estado_pago.png" alt="Diagrama de Estados: Pago" style="max-height: 400px; border: 1px solid #e0e0e0; border-radius: 4px;">
+    </div>
+    <p style="font-size: 0.5em; color: #555; text-align: center; margin-top: 0.5em;">5 estados: Pendiente, Parcial, Pagado, Facturado + Autorizado (descuento)</p>
+    <aside class="notes">
+        Implementamos estados para pagos parciales (abonos) y el estado 'Autorizado' para descuentos especiales que solo la administradora puede aprobar. El flujo soporta el modelo real del negocio donde los pacientes a veces pagan en cuotas.
+    </aside>
+</section>
+
+<!-- HU-PAC-003: WILLIAM -->
+<section>
+    <h2>HU-PAC-003 &mdash; Historia Clinica</h2>
+    <p style="font-size: 0.55em; color: #555;"><strong>Responsable: William</strong> &nbsp;|&nbsp; Como Licenciada/Medico, puedo consultar la historia clinica</p>
+    <div class="tabla-2col" style="margin-top: 0.5em;">
+        <div class="tabla-row">
+            <div class="tabla-cell tabla-cell-left">
+                <h3>Criterios de Aceptacion</h3>
+                <ul style="font-size: 0.55em;">
+                    <li>Creacion automatica al registrar paciente</li>
+                    <li>Numero secuencial (HC-0001)</li>
+                    <li>Antecedentes, alergias, medicamentos</li>
+                    <li>Notas de evolucion tipificadas</li>
+                </ul>
+            </div>
+            <div class="tabla-cell">
+                <h3>Codigo (3 Capas)</h3>
+                <ul style="font-size: 0.5em;">
+                    <li><strong>Frontend:</strong> PacienteDetailPage.tsx &mdash; Antecedentes + notas</li>
+                    <li><strong>Service:</strong> historia/service.go &mdash; GetByPaciente, UpdateAntecedentes</li>
+                    <li><strong>Repository:</strong> historia_repo.go &mdash; SELECT + UPDATE campos</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <aside class="notes">
+        FLUJO: Frontend solicita datos completos del paciente. Backend implementa validacion estricta: verifica que el paciente sea valido antes de devolver datos, cumpliendo normas de acceso a informacion (Ley 3131). ARGUMENTO: La consulta de historia clinica no es solo leer datos; es un proceso validado que asegura que el medico accede a un expediente existente y activo.
+    </aside>
+</section>
+
+<!-- DEMO -->
+<section>
+    <h2>Demostracion en Vivo</h2>
+    <div class="destacado-central">
+        <p>Sistema funcional desplegado con Docker</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; margin-top: 1em;">
+        <div style="text-align: center;">
+            <p style="font-size: 0.6em; color: #555; font-weight: 600;">1. Login por rol</p>
+            <p style="font-size: 0.45em; color: #777;">4 usuarios con permisos distintos</p>
+        </div>
+        <div style="text-align: center;">
+            <p style="font-size: 0.6em; color: #555; font-weight: 600;">2. Flujo de paciente</p>
+            <p style="font-size: 0.45em; color: #777;">Registro &rarr; Consentimiento &rarr; Historia</p>
+        </div>
+        <div style="text-align: center;">
+            <p style="font-size: 0.6em; color: #555; font-weight: 600;">3. Flujo de cita</p>
+            <p style="font-size: 0.45em; color: #777;">Nueva &rarr; Agendada &rarr; Atendida</p>
+        </div>
+    </div>
+    <aside class="notes">
+        Demostrar en vivo: 1) Login como Administradora, mostrar acceso total. 2) Registrar un paciente nuevo, ver que se genera codigo y historia automaticamente. 3) Registrar consentimiento con firma digital. 4) Crear una cita y cambiar estados. 5) Intentar con usuario Interno para mostrar restricciones de rol.
+    </aside>
+</section>
+
+<!-- ============================================
+     REBECA (Slides 18-22): HU-PAC-002 + HU-ADM-001 + Permisos + Cierre
+     ============================================ -->
+
+<!-- HU-PAC-002: REBECA -->
+<section>
+    <h2>HU-PAC-002 &mdash; Consentimiento Informado</h2>
+    <p style="font-size: 0.55em; color: #555;"><strong>Responsable: Rebeca</strong> &nbsp;|&nbsp; Como Licenciada, puedo registrar el consentimiento</p>
+    <div class="tabla-2col" style="margin-top: 0.5em;">
+        <div class="tabla-row">
+            <div class="tabla-cell tabla-cell-left">
+                <h3>Criterios de Aceptacion</h3>
+                <ul style="font-size: 0.55em;">
+                    <li>Registrar con fecha, hora y firma digital</li>
+                    <li>Firma del paciente en canvas</li>
+                    <li>Autorizar o rechazar toma de fotos</li>
+                    <li>Obligatorio antes de cualquier tratamiento</li>
+                </ul>
+            </div>
+            <div class="tabla-cell">
+                <h3>Codigo (3 Capas)</h3>
+                <ul style="font-size: 0.5em;">
+                    <li><strong>Frontend:</strong> ConsentimientoForm.tsx &mdash; Canvas + firma base64</li>
+                    <li><strong>Service:</strong> consentimiento/service.go &mdash; Decodifica firma, vincula</li>
+                    <li><strong>Repository:</strong> consentimiento_repo.go &mdash; INSERT firma como bytea</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <aside class="notes">
+        FLUJO: Usamos un canvas HTML5 para capturar el trazo de la firma y lo convertimos a Base64. Backend recibe el string Base64, lo decodifica a bytes reales y valida la existencia del paciente. Se guarda la firma digital y el flag autoriza_fotos como evidencia legal. ARGUMENTO: Digitalizamos un requisito legal. Al guardar la firma decodificada y vinculada, cumplimos con la documentacion de riesgos sin usar papel fisico.
+    </aside>
+</section>
+
+<!-- HU-ADM-001: REBECA -->
+<section>
+    <h2>HU-ADM-001 &mdash; Gestion de Usuarios</h2>
+    <p style="font-size: 0.55em; color: #555;"><strong>Responsable: Rebeca</strong> &nbsp;|&nbsp; Como Administradora, puedo gestionar usuarios y roles</p>
+    <div class="tabla-2col" style="margin-top: 0.5em;">
+        <div class="tabla-row">
+            <div class="tabla-cell tabla-cell-left">
+                <h3>Criterios de Aceptacion</h3>
+                <ul style="font-size: 0.55em;">
+                    <li>Crear usuarios con 4 roles predefinidos</li>
+                    <li>Activar/desactivar sin eliminar datos</li>
+                    <li>Permisos diferenciados por rol</li>
+                    <li>Login rechazado para usuarios inactivos</li>
+                </ul>
+            </div>
+            <div class="tabla-cell">
+                <h3>Codigo (3 Capas)</h3>
+                <ul style="font-size: 0.5em;">
+                    <li><strong>Frontend:</strong> UsuariosPage.tsx &mdash; CRUD + toggle activo</li>
+                    <li><strong>Service:</strong> usuario/service.go &mdash; Valida email, hash bcrypt</li>
+                    <li><strong>Repository:</strong> usuario_repo.go &mdash; INSERT + UPDATE activo</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <aside class="notes">
+        FLUJO: Acceso restringido exclusivamente al rol Administradora. Backend valida email unico, verifica que el rol exista, y aplica bcrypt con costo 12 a la contrasena. Nunca se guarda texto plano. ARGUMENTO: La seguridad es prioritaria. Usamos hashing unidireccional (bcrypt). Incluso si alguien accede a la base de datos, no podra leer las contrasenas.
+    </aside>
+</section>
+
+<!-- PERMISOS POR ROL -->
+<section>
+    <h2>Matriz de Permisos por Rol</h2>
+    <div style="margin-top: 1em;">
+        <table style="width: 100%; font-size: 0.5em; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #333;">
+                    <th style="text-align: left; padding: 0.5em;">Funcionalidad</th>
+                    <th style="text-align: center; padding: 0.5em;">Admin</th>
+                    <th style="text-align: center; padding: 0.5em;">Licenciada</th>
+                    <th style="text-align: center; padding: 0.5em;">Medico</th>
+                    <th style="text-align: center; padding: 0.5em;">Interno</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.5em;">Gestionar usuarios</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.5em;">Crear pacientes y citas</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.5em;">Registrar consentimientos</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.5em;">Editar antecedentes clinicos</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 0.5em;">Crear notas de evolucion</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&mdash;</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5em;">Ver expedientes (lectura)</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                    <td style="text-align: center;">&check;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <aside class="notes">
+        La matriz implementa el principio de minimo privilegio. El Interno solo puede ver, el Medico puede agregar notas, la Licenciada opera el dia a dia y la Administradora tiene acceso total. Esto se implementa con middleware JWT que verifica el rol en cada peticion HTTP.
+    </aside>
+</section>
+
+<!-- CIERRE -->
+<section class="proyecto-separador">
+    <h1>Gracias</h1>
+    <p class="proyecto-autor">Preguntas y Comentarios</p>
+    <aside class="notes">
+        CIERRE: Este Sprint 1 no solo entrega pantallas funcionales, sino una arquitectura segura, escalable y legalmente cumplidora que sirve como base solida para todo el desarrollo futuro del Centro Caribel. Estamos listos para preguntas.
+    </aside>
+</section>

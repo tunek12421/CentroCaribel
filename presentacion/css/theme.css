@@ -1,0 +1,274 @@
+/* ============================================
+   TEMA PERSONALIZADO - CENTRO CARIBEL
+   Minimalista, profesional, monocromo
+   ============================================ */
+
+body {
+    background: #2c2c2c;
+}
+
+.reveal {
+    font-family: 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+    font-size: 32px;
+}
+
+.reveal .slides {
+    text-align: left;
+}
+
+/* Tipografia base */
+.reveal h1 {
+    color: #222;
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+    text-transform: none;
+}
+
+.reveal h2 {
+    color: #222;
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+    margin-top: 0.8em;
+    text-transform: none;
+}
+
+.reveal h3 {
+    color: #444;
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 0.3em;
+    margin-top: 0.5em;
+}
+
+.reveal p {
+    font-size: 0.65em;
+    line-height: 1.6;
+    margin-bottom: 0.7em;
+    color: #333;
+}
+
+.reveal li {
+    font-size: 0.65em;
+    line-height: 1.5;
+    margin-bottom: 0.4em;
+    color: #333;
+}
+
+.reveal strong {
+    color: #111;
+    font-weight: 600;
+}
+
+/* ============================================
+   PORTADA
+   ============================================ */
+.portada {
+    background: white;
+    border-top: 12px solid #333;
+}
+
+.portada h1 {
+    color: #222;
+    font-size: 1.8em;
+    line-height: 1.3;
+    margin-bottom: 0.8em;
+}
+
+.portada .subtitle {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 1.5em;
+}
+
+.portada .info {
+    margin-top: 2em;
+    padding-top: 1em;
+    border-top: 3px solid #e0e0e0;
+}
+
+.portada .info p {
+    font-size: 0.5em;
+    color: #555;
+    margin-bottom: 0.3em;
+}
+
+/* ============================================
+   SECCIONES
+   ============================================ */
+.seccion {
+    margin-bottom: 1.5em;
+}
+
+.seccion-titulo {
+    color: #333;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.2em;
+    border-bottom: 2px solid #333;
+    display: inline-block;
+}
+
+/* ============================================
+   TABLA DE 2 COLUMNAS
+   ============================================ */
+.tabla-2col {
+    display: table;
+    width: 100%;
+    margin: 1em 0;
+}
+
+.tabla-row {
+    display: table-row;
+}
+
+.tabla-cell {
+    display: table-cell;
+    width: 50%;
+    padding: 1em;
+    vertical-align: top;
+}
+
+.tabla-cell-left {
+    border-right: 3px solid #e0e0e0;
+}
+
+/* ============================================
+   ITEMS NUMERADOS
+   ============================================ */
+.item-num {
+    margin-bottom: 1.5em;
+}
+
+.item-num-titulo {
+    color: #222;
+    font-size: 0.7em;
+    font-weight: 600;
+    margin-bottom: 0.3em;
+}
+
+.item-num-texto {
+    font-size: 0.6em;
+    line-height: 1.5;
+    color: #444;
+}
+
+/* ============================================
+   DESTACADO CENTRAL
+   ============================================ */
+.destacado-central {
+    text-align: center;
+    padding: 2em;
+    margin: 2em 0;
+    background: #f8f9fa;
+    border-left: 8px solid #333;
+}
+
+.destacado-central p {
+    font-size: 0.75em;
+    font-weight: 600;
+    color: #222;
+    line-height: 1.5;
+    text-align: center;
+}
+
+/* ============================================
+   GRID
+   ============================================ */
+.grid-simple {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    margin: 1em 0;
+}
+
+.grid-3col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5em;
+    margin: 1em 0;
+}
+
+/* ============================================
+   FOOTER Y NUMERACION
+   ============================================ */
+.slide-footer {
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    font-size: 0.4em;
+    color: #999;
+}
+
+.slide-num {
+    position: absolute;
+    top: 20px;
+    right: 60px;
+    font-size: 0.5em;
+    color: #999;
+}
+
+/* ============================================
+   SEPARADOR DE PROYECTOS
+   ============================================ */
+.proyecto-separador {
+    background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+    text-align: center;
+}
+
+.proyecto-separador h1 {
+    color: white;
+    font-size: 2.5em;
+}
+
+.proyecto-separador .proyecto-num {
+    font-size: 0.6em;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1em;
+}
+
+.proyecto-separador .proyecto-autor {
+    font-size: 0.5em;
+    color: rgba(255,255,255,0.8);
+    margin-top: 2em;
+}
+
+/* ============================================
+   TARJETAS DE CONTENIDO
+   ============================================ */
+.card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1.5em;
+    margin: 0.5em 0;
+}
+
+.card-primary {
+    border-left: 5px solid #333;
+}
+
+.card-success {
+    border-left: 5px solid #555;
+}
+
+.card-warning {
+    border-left: 5px solid #888;
+}
+
+/* ============================================
+   UTILIDADES
+   ============================================ */
+.text-center {
+    text-align: center;
+}
+
+.text-small {
+    font-size: 0.55em;
+}
+
+.mt-1 { margin-top: 1em; }
+.mt-2 { margin-top: 2em; }
+.mb-1 { margin-bottom: 1em; }
+.mb-2 { margin-bottom: 2em; }
